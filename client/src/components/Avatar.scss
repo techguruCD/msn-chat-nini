@@ -1,0 +1,29 @@
+@import '../styles/variables.scss';
+@import '../styles/mixins.scss';
+
+.user-avatar {
+    border-radius: $radiusSize;
+    border: 1px solid $avatarBorderColor;
+    position: relative;
+    @include paddingSize();
+    @include marginLeft();
+    @include avatarCoverSize();
+
+    img {
+        border-radius: $radiusSize;
+        @include avatarSize();
+    }
+
+    .delete-btn {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        width: 20px;
+        height: 20px;
+        img {
+            border-radius: unset;
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
