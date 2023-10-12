@@ -38,10 +38,10 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route exact path="/chat/home" element={<PrivateRoute component={Home} />} />
-          <Route exact path="/chat/login" element={<PublicRoute component={Login} />} />
-          <Route exact path="/chat/register" element={<PublicRoute component={Register} />} />
-          <Route path="*" element={<Navigate to="/chat/login" />} />
+          <Route exact path="/home" element={<PrivateRoute component={Home} />} />
+          <Route exact path="/login" element={<PublicRoute component={Login} />} />
+          <Route exact path="/register" element={<PublicRoute component={Register} />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>
     </Provider>

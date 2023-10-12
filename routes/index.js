@@ -4,13 +4,9 @@ const router = express.Router()
 const api = require('./api')
 
 router.use('/api', api)
-// router.get('/chat', (req, res) => {
-//     console.log(123)
-//     res.sendFile('../client/build/index.html')
-// })
 
 router.get('*', (req, res) => {
-    res.redirect('/main')
+    res.redirect('/')
 })
 
 module.exports = router;

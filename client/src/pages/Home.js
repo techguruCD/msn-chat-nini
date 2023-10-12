@@ -147,7 +147,7 @@ const Home = () => {
                             {messages.map(message => <MessageItem key={message.id} message={message} mine={message.sender == user.id} />)}
                         </div>
                     </div>
-                    <Avatar imageURL={target.mode==1?'/chat/avatar/icons8-multiple-users-80.png':(target.id?(target.avatar?SERVER_URL + target.avatar:'/chat/avatar/online-avatar-online.png'):'/chat/avatar/msn-icon.png')} onClick={handleShow} />
+                    <Avatar imageURL={target.mode==1?'/avatar/icons8-multiple-users-80.png':(target.id?(target.avatar?SERVER_URL + target.avatar:'/avatar/online-avatar-online.png'):'/avatar/msn-icon.png')} onClick={handleShow} />
                 </div>
                 <div className='from-container d-flex'>
                     <div className='from-message-area'>
@@ -177,7 +177,7 @@ const Home = () => {
                                 </Dropdown.Menu>
                             </Dropdown>
                             <div className='font-selector-icon px-2' onClick={sendNudge}>
-                                <img src='/chat/icons8-phone-vibration-96.png'></img>
+                                <img src='/icons8-phone-vibration-96.png'></img>
                             </div>
                         </div>
                         <div className='from-message-history'
@@ -191,7 +191,7 @@ const Home = () => {
                         </div>
                         <div className='send-button' onClick={onSend}>Send</div>
                     </div>
-                    <Avatar mine={true} onDelete={onAvatarDelete} imageURL={user.avatar==null?'/chat/avatar/online-avatar-online.png':SERVER_URL+user.avatar} onClick={(e) => {e.preventDefault(); avatarRef.current.click();}}/>
+                    <Avatar mine={true} onDelete={onAvatarDelete} imageURL={user.avatar==null?'/avatar/online-avatar-online.png':SERVER_URL+user.avatar} onClick={(e) => {e.preventDefault(); avatarRef.current.click();}}/>
                     <input type='file' onChange={onAvatarChange} hidden ref={avatarRef}/>
                 </div>
             </div>

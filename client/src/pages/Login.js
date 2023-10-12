@@ -24,7 +24,7 @@ const Login = () => {
             <div className='login-area'>
                 <div className='login-form'>
                     <div className='avatar-area'>
-                        <Avatar imageURL={'/chat/avatar/msn-icon.png'} marginLeft={0} />
+                        <Avatar imageURL={'/avatar/msn-icon.png'} marginLeft={0} />
                     </div>
                     <form className='input-form' onSubmit={loginSubmit}>
                         <div className='input-box'>
@@ -41,7 +41,7 @@ const Login = () => {
                         </div>
                         <div className='button-box'>
                             <button>Sign In</button>
-                            <Link to="/chat/register">Sign Up</Link>
+                            <Link to="/register">Sign Up</Link>
                         </div>
                         {/* <div className='input-area'>
                             <div>Username: </div>

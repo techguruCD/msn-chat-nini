@@ -56,20 +56,20 @@ function ContactModal({ show, setModalShow }) {
                     <ListGroup className='px-1' as="ul">
                         <ListGroup.Item as="li" action active={selectedTarget.id == -1} className='d-flex align-items-center public-chat-item'
                             onClick={() => setSelectedTarget({ id: -1, mode: 1, name: 'Public Chat' })}>
-                            <img src='/chat/avatar/icons8-multiple-users-80.png' />
+                            <img src='/avatar/icons8-multiple-users-80.png' />
                             Public Chat
                         </ListGroup.Item>
                     </ListGroup>
                     <div className='list-container'>
                         <div className='list-caption' onClick={() => setOnlineCollapsed(!onlineCollapseed)}>
-                            <img src={!onlineCollapseed ? '/chat/icons8-minus-48.png' : '/chat/icons8-plus-48.png'}></img>
+                            <img src={!onlineCollapseed ? '/icons8-minus-48.png' : '/icons8-plus-48.png'}></img>
                             <span>Online</span>
                         </div>
                         <ListGroup as="ul" style={{ display: onlineCollapseed ? 'none' : 'flex' }}>
                             {
                                 contacts.filter(contact => contact.online).map(contact => {
                                     return <ListGroup.Item as="li" action active={selectedTarget.id == contact.id} key={contact.id} className='d-flex align-items-center' onClick={() => setSelectedTarget(contact)}>
-                                        <img src='/chat/online-avatar-online.png' />
+                                        <img src='/online-avatar-online.png' />
                                         {contact.name}
                                     </ListGroup.Item>
                                 })
@@ -78,7 +78,7 @@ function ContactModal({ show, setModalShow }) {
                     </div>
                     <div className='list-container'>
                         <div className='list-caption' onClick={() => setOfflineCollapsed(!offlineCollapseed)}>
-                            <img src={!offlineCollapseed ? '/chat/icons8-minus-48.png' : '/chat/icons8-plus-48.png'}></img>
+                            <img src={!offlineCollapseed ? '/icons8-minus-48.png' : '/icons8-plus-48.png'}></img>
                             <span>Offline</span>
                         </div>
                         <ListGroup as="ul" style={{ display: offlineCollapseed ? 'none' : 'flex' }}>
@@ -86,7 +86,7 @@ function ContactModal({ show, setModalShow }) {
                                 contacts.filter(contact => !contact.online).map(contact => {
                                     return <ListGroup.Item as="li" action active={selectedTarget.id == contact.id} key={contact.id} className='d-flex align-items-center' onClick={() => setSelectedTarget(contact)}>
                                         <div className='me-auto'>
-                                            <img src='/chat/online-avatar-offline.png' /> {contact.name}
+                                            <img src='/online-avatar-offline.png' /> {contact.name}
                                         </div>
                                         {/* <Badge bg="secondary" pill>
                                             14
