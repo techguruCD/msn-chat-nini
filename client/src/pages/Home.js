@@ -154,7 +154,7 @@ const Home = () => {
             dispatch(uploadAvatar(e.target.files[0]))
     }
     const onAvatarDelete = (e) => {
-        dispatch(uploadAvatar(null))
+        // dispatch(uploadAvatar(null))
     }
     const messageListRef = useRef()
     const messageEditRef = useRef()
@@ -260,7 +260,7 @@ const Home = () => {
                         </div>
                         <div className='send-button' onClick={onSend}>Send</div>
                     </div>
-                    <Avatar mine={true} onDelete={onAvatarDelete} imageURL={user.avatar == null ? '/avatar/online-avatar-online.png' : SERVER_URL + user.avatar} onClick={(e) => { e.preventDefault(); avatarRef.current.click(); }} />
+                    <Avatar mine={true} onDelete={onAvatarDelete} imageURL={user.avatar == null ? '/avatar/online-avatar-online.png' : SERVER_URL + user.avatar} onClick={(e) => { e.preventDefault(); /*avatarRef.current.click();*/ }} />
                     <input type='file' onChange={onAvatarChange} hidden ref={avatarRef} />
                 </div>
             </div>
