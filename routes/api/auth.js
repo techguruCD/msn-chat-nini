@@ -5,6 +5,7 @@ const authController = require('../../controllers/auth')
 
 router.post('/login', authController.login)
 router.put('/register', authController.register)
+router.post('/info', passport.authenticate('jwt', { session: false }), authController.info)
 router.post('/avatar', passport.authenticate('jwt', { session: false }), authController.updateAvatar)
 
 module.exports = router;

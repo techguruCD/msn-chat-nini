@@ -57,6 +57,44 @@ exports.register = (req, res) => {
     })
 }
 
+exports.info = (req, res) => {
+    User.findOne({ where: { id: req.user.id } })
+        .then(user => {
+            const { answer } = req.body;
+            user.twitter = answer[0];
+            user.telegram = answer[1];
+            user.wallet = answer[2];
+            user.joinReason = answer[3]
+            user.isFilled = 1;
+            user.save()
+                .then(user => {
+                    const payLoad = { id: user.id, name: user.name, name: user.name, avatar: user.avatar, isFilled: user.isFilled }
+                    jwt.sign(
+                        payLoad,
+                        process.env.SECRET_OR_KEY,
+                        { expiresIn: 360000 },
+                        (err, token) => {
+                            return res.json({
+                                status: 0,
+                                token: 'Bearer ' + token
+                            })
+                        })
+                })
+                .catch(err => {
+                    res.json({
+                        status: 1,
+                        message: { warning: 'Please try again later.' }
+                    })
+                })
+        })
+        .catch(err => {
+            res.json({
+                status: 1,
+                message: { warning: 'Please try again later.' }
+            })
+        })
+}
+
 exports.login = (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body)
     const { name, password } = req.body
@@ -77,7 +115,7 @@ exports.login = (req, res) => {
                 }
             })
 
-        const payLoad = { id: user.id, name: user.name, name: user.name, avatar: user.avatar }
+        const payLoad = { id: user.id, name: user.name, name: user.name, avatar: user.avatar, isFilled: user.isFilled }
         jwt.sign(
             payLoad,
             process.env.SECRET_OR_KEY,

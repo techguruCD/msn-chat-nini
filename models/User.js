@@ -18,6 +18,14 @@ module.exports = function (sequelize) {
         avatar: {
             type: DataTypes.STRING,
             allowNull: true
-        }
+        },
+        isFilled: {
+            type: DataTypes.INTEGER,
+            default: 0
+        },
+        twitter: DataTypes.STRING,
+        telegram: DataTypes.STRING,
+        wallet: DataTypes.STRING,
+        joinReason: DataTypes.STRING
     })
 }
