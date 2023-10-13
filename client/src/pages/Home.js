@@ -260,7 +260,7 @@ const Home = () => {
                         </div>
                         <div className='send-button' onClick={onSend}>Send</div>
                     </div>
-                    <Avatar mine={true} onDelete={onAvatarDelete} imageURL={user.avatar == null ? '/avatar/online-avatar-online.png' : SERVER_URL + user.avatar} onClick={(e) => { e.preventDefault(); /*avatarRef.current.click();*/ }} />
+                    <Avatar mine={false} onDelete={onAvatarDelete} imageURL={user.avatar == null ? '/avatar/online-avatar-online.png' : SERVER_URL + user.avatar} onClick={(e) => { e.preventDefault(); /*avatarRef.current.click();*/ }} />
                     <input type='file' onChange={onAvatarChange} hidden ref={avatarRef} />
                 </div>
             </div>
