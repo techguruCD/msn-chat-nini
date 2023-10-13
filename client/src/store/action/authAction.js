@@ -24,7 +24,7 @@ export const loginUser = (param) => dispatch => {
                         dispatch(setCurrentUser(decoded))
                         socket.connect()
                         dispatch(setChatTarget({}))
-                        toast('Sign in successfully', 'success')
+                        toast('Signed in successfully', 'success')
                     } catch (err) {
                         dispatch(setCurrentUser({}))
                     }

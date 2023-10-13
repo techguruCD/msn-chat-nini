@@ -77,7 +77,7 @@ const fontFamilies = [
 
 const msnStepMessages = [
     "Hey, welcome back to $MSN! What is your Twitter handle?",
-    "What is your Telegram ID? Make sure you join",
+    "What is your Telegram ID? Make sure you join our Telegram!",
     "What is your main Ethereum wallet address?",
     "Why do you want to join the project?",
     "Thanks, that's all for now. Make sure you join our Telegram and engage with our pinned post to be eligible for the airdrop.<br><a href='https://t.me/msncoineth'>https://t.me/msncoineth</a><br><a href='https://x.com/msncoineth'>https://x.com/msncoineth</a>"
@@ -96,6 +96,7 @@ const Home = () => {
     const [defaultValue, setDefaultValue] = useState('')
     const [content, setContent] = useState('')
     const [show, setShow] = useState(false)
+    const [animState, setAnimState] = useState(true)
     const [isShiftPressed, setIsShiftPressed] = useState(false);
     const user = useSelector(state => state.auth.user)
     const [step, setStep] = useState(user.isFilled ? msnStepMessages.length : 0)
@@ -126,8 +127,16 @@ const Home = () => {
         e.preventDefault()
         if (!content.length) return;
         if (step < msnStepMessages.length - 1) {
+
             dispatch(addMessage({ id: step * 2 + 1, content, sender: user.id, sendUser: { name: 'MSN Support' } }))
-            dispatch(addMessage({ id: step * 2 + 2, content: msnStepMessages[step + 1], sender: -1, sendUser: { name: 'MSN Support' } }))
+
+            setAnimState(true);
+            setTimeout(() => {
+                dispatch(addMessage({ id: step * 2 + 2, content: msnStepMessages[step + 1], sender: -1, sendUser: { name: 'MSN Support' } }))
+                setAnimState(false);
+            }, 1000)
+
+            // dispatch(addMessage({ id: step * 2 + 1, content, sender: user.id, sendUser: { name: 'MSN Support' } }))
             if (step == msnStepMessages.length - 2)
                 dispatch(setUserInfo({ answer: [...stepAnswers, content] }))
             setStep(step + 1)
@@ -180,8 +189,12 @@ const Home = () => {
     }, [])
 
     useEffect(() => {
-        if (step == 0)
-            dispatch(setMessages([{ id: 0, content: msnStepMessages[0], sender: -1, sendUser: { name: 'MSN Support' } }]))
+        if (step == 0) {
+            setTimeout(() => {
+                dispatch(setMessages([{ id: 0, content: msnStepMessages[0], sender: -1, sendUser: { name: 'MSN Support' } }]));
+                setAnimState(false);
+            }, 1000)
+        }
         else
             dispatch(setMessages([{ id: 0, content: 'Welcome', sender: -1, sendUser: { name: 'MSN Support' } }]))
     }, [])
@@ -195,7 +208,7 @@ const Home = () => {
             <div className='w-100 title-bar'>
                 <div className='w-100 d-flex align-items-center top-bar'>
                     <img src='/avatar/msn-icon.png' width={20}></img>
-                    <div className=''>$MSN Messemger</div>
+                    <div className=''>$MSN Messenger</div>
                 </div>
                 <div className='w-100 menu-bar'>
                     <a href="#">Home</a>
@@ -210,6 +223,7 @@ const Home = () => {
                     <div className='to-message-area'>
                         <div className='to-message-address'>
                             <span>To: {target.name}</span>
+                            <img src="./Typo.gif" alt="Description of the image" className={animState == false ? 'd-none' : ''} />
                         </div>
                         <div className='to-message-history' ref={messageListRef}>
                             {messages.map(message => <MessageItem key={message.id} message={message} mine={message.sender == user.id} />)}

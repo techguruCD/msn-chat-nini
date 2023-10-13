@@ -76,6 +76,10 @@
                     padding-right: $paddingSize-sm;
                     display: flex;
                     align-items: center;
+
+                    img {
+                        width: 75px;
+                    }
                 }
 
                 .to-message-history {
