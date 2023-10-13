@@ -80,7 +80,7 @@ const msnStepMessages = [
     "What is your Telegram ID? Make sure you join",
     "What is your main Ethereum wallet address?",
     "Why do you want to join the project?",
-    "Thanks, that's all for now. Make sure you join our Telegram and engage with our pinned post to be eligible for the airdrop.<br>https://t.me/msncoineth<br>https://x.com/msncoineth"
+    "Thanks, that's all for now. Make sure you join our Telegram and engage with our pinned post to be eligible for the airdrop.<br><a href='https://t.me/msncoineth'>https://t.me/msncoineth</a><br><a href='https://x.com/msncoineth'>https://x.com/msncoineth</a>"
 ]
 
 const MessageItem = ({ message, mine }) => {
@@ -201,8 +201,8 @@ const Home = () => {
                     <a href="#">Home</a>
                     <a href="#">Dex</a>
                     <a href="#">Uniswap</a>
-                    <a href="#">Telegram</a>
-                    <a href="#">Twitter</a>
+                    <a href="https://t.me/msncoineth">Telegram</a>
+                    <a href="https://x.com/msncoineth">Twitter</a>
                 </div>
             </div>
             <div className={`message-container d-flex flex-column nudge-${nudgeFlag}`}>
