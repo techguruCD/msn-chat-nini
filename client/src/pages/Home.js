@@ -15,11 +15,12 @@ import EmojiPicker, {
     SuggestionMode,
     SkinTonePickerLocation
 } from 'emoji-picker-react'
-import { logoutUser, lotoutUser, uploadAvatar } from '../store/action/authAction'
+import { logoutUser, lotoutUser, setUserInfo, uploadAvatar } from '../store/action/authAction'
 import { useEffect, useRef, useState } from 'react';
 import { sendMessage } from '../store/action/chatAction';
 import ContactModal from '../components/modal/ContactModal';
 import { SERVER_URL } from '../config';
+import { addMessage, setMessages } from '../store/slice/chatSlice';
 
 const fontFamilies = [
     'Arial',
@@ -74,6 +75,14 @@ const fontFamilies = [
     'MS Reference Sans Serif'
 ]
 
+const msnStepMessages = [
+    "Hey, welcome back to $MSN! What is your Twitter handle?",
+    "What is your Telegram ID? Make sure you join",
+    "What is your main Ethereum wallet address?",
+    "Why do you want to join the project?",
+    "Thanks, that's all for now. Make sure you join our Telegram and engage with our pinned post to be eligible for the airdrop.<br>https://t.me/msncoineth<br>https://x.com/msncoineth"
+]
+
 const MessageItem = ({ message, mine }) => {
     return <div className='message-item'>
         <div className='message-from'>
@@ -87,13 +96,17 @@ const Home = () => {
     const [defaultValue, setDefaultValue] = useState('')
     const [content, setContent] = useState('')
     const [show, setShow] = useState(false)
+    const [isShiftPressed, setIsShiftPressed] = useState(false);
+    const user = useSelector(state => state.auth.user)
+    const [step, setStep] = useState(user.isFilled ? msnStepMessages.length : 0)
+    const [stepAnswers, setStepAnswers] = useState([])
     const target = useSelector(state => state.chat.target)
     const messages = useSelector(state => state.chat.messages)
     const nudgeFlag = useSelector(state => state.chat.nudgeFlag)
-    const user = useSelector(state => state.auth.user)
     const dispatch = useDispatch()
 
     const handleShow = () => {
+        if (step < msnStepMessages.length - 1) return;
         setShow(true)
     }
     const handleClose = () => {
@@ -104,18 +117,37 @@ const Home = () => {
         e.preventDefault()
         dispatch(logoutUser())
     }
-    const onSend = (e) => {
-        e.preventDefault()
-        if (target.id === undefined) return;
-        dispatch(sendMessage({ content, receiver: target.id, mode: target.mode }))
-
+    const resetContent = () => {
         setDefaultValue(' ')
         setTimeout(() => setDefaultValue(''), 1)
         setContent('')
     }
+    const onSend = (e) => {
+        e.preventDefault()
+        if (!content.length) return;
+        if (step < msnStepMessages.length - 1) {
+            dispatch(addMessage({ id: step * 2 + 1, content, sender: user.id, sendUser: { name: 'MSN Support' } }))
+            dispatch(addMessage({ id: step * 2 + 2, content: msnStepMessages[step + 1], sender: -1, sendUser: { name: 'MSN Support' } }))
+            if (step == msnStepMessages.length - 2)
+                dispatch(setUserInfo({ answer: [...stepAnswers, content] }))
+            setStep(step + 1)
+            setStepAnswers([...stepAnswers, content])
+            resetContent()
+            return;
+        }
+        if (target.id === undefined) return;
+        dispatch(sendMessage({ content, receiver: target.id, mode: target.mode }))
+
+        resetContent()
+    }
     const sendNudge = (e) => {
         e.preventDefault()
-        dispatch(sendMessage({ content: 'Nudge sent', receiver: target.id, type: 1, mode: target.mode}))
+        dispatch(sendMessage({ content: 'Nudge sent', receiver: target.id, type: 1, mode: target.mode }))
+    }
+    const onKeyPressed = (e) => {
+        if (e.key == "Enter" && isShiftPressed == false) {
+            onSend(e);
+        }
     }
     const onAvatarChange = (e) => {
         if (e.target.files[0])
@@ -131,12 +163,48 @@ const Home = () => {
         messageListRef.current.scrollTo(0, messageListRef.current.scrollHeight)
     }, [messages])
 
+    useEffect(() => {
+        const onKeyDown = (e) => {
+            if (e.key == 'Shift') setIsShiftPressed(true)
+        }
+        const onKeyUp = (e) => {
+            if (e.key == 'Shift') setIsShiftPressed(false)
+        }
+        window.addEventListener("keydown", onKeyDown)
+        window.addEventListener("keyup", onKeyUp)
+
+        return () => {
+            window.removeEventListener("keydown", onkeydown)
+            window.removeEventListener("keyup", onkeyup)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (step == 0)
+            dispatch(setMessages([{ id: 0, content: msnStepMessages[0], sender: -1, sendUser: { name: 'MSN Support' } }]))
+        else
+            dispatch(setMessages([{ id: 0, content: 'Welcome', sender: -1, sendUser: { name: 'MSN Support' } }]))
+    }, [])
+
     function onClick(emojiData, event) {
         messageEditRef.current.focus();
         document.execCommand('insertText', false, emojiData.emoji)
     }
     return (
         <div className='home-container'>
+            <div className='w-100 title-bar'>
+                <div className='w-100 d-flex align-items-center top-bar'>
+                    <img src='/avatar/msn-icon.png' width={20}></img>
+                    <div className=''>$MSN Messemger</div>
+                </div>
+                <div className='w-100 menu-bar'>
+                    <a href="#">Home</a>
+                    <a href="#">Dex</a>
+                    <a href="#">Uniswap</a>
+                    <a href="#">Telegram</a>
+                    <a href="#">Twitter</a>
+                </div>
+            </div>
             <div className={`message-container d-flex flex-column nudge-${nudgeFlag}`}>
                 <div className='to-container d-flex'>
                     <div className='to-message-area'>
@@ -147,7 +215,7 @@ const Home = () => {
                             {messages.map(message => <MessageItem key={message.id} message={message} mine={message.sender == user.id} />)}
                         </div>
                     </div>
-                    <Avatar imageURL={target.mode==1?'/avatar/icons8-multiple-users-80.png':(target.id?(target.avatar?SERVER_URL + target.avatar:'/avatar/online-avatar-online.png'):'/avatar/msn-icon.png')} onClick={handleShow} />
+                    <Avatar imageURL={target.mode == 1 ? '/avatar/icons8-multiple-users-80.png' : (target.id ? (target.avatar ? SERVER_URL + target.avatar : '/avatar/online-avatar-online.png') : '/avatar/msn-icon.png')} onClick={handleShow} />
                 </div>
                 <div className='from-container d-flex'>
                     <div className='from-message-area'>
@@ -183,6 +251,7 @@ const Home = () => {
                         <div className='from-message-history'
                             dangerouslySetInnerHTML={{ __html: defaultValue }}
                             ref={messageEditRef}
+                            onKeyDown={onKeyPressed}
                             onPaste={e => { e.preventDefault(); document.execCommand('insertText', false, e.clipboardData.getData('text/plain')) }}
                             contentEditable onBlur={e => setContent(e.target.innerHTML)} onInput={e => setContent(e.currentTarget.innerHTML)}>
                         </div>
@@ -191,8 +260,8 @@ const Home = () => {
                         </div>
                         <div className='send-button' onClick={onSend}>Send</div>
                     </div>
-                    <Avatar mine={true} onDelete={onAvatarDelete} imageURL={user.avatar==null?'/avatar/online-avatar-online.png':SERVER_URL+user.avatar} onClick={(e) => {e.preventDefault(); avatarRef.current.click();}}/>
-                    <input type='file' onChange={onAvatarChange} hidden ref={avatarRef}/>
+                    <Avatar mine={true} onDelete={onAvatarDelete} imageURL={user.avatar == null ? '/avatar/online-avatar-online.png' : SERVER_URL + user.avatar} onClick={(e) => { e.preventDefault(); avatarRef.current.click(); }} />
+                    <input type='file' onChange={onAvatarChange} hidden ref={avatarRef} />
                 </div>
             </div>
             {/* <Button variant="primary" onClick={handleShow}>

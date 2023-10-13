@@ -9,6 +9,13 @@
     height: 100vh;
     @include paddingSize();
 
+    input,
+    button {
+        width: 100%;
+        border: 1px solid $borderColor;
+        outline: none;
+    }
+
     .login-area {
         background-color: $backgroundColor;
         border: 1px solid $borderColor;

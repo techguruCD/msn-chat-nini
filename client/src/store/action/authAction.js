@@ -7,6 +7,7 @@ import socket from '../../socket'
 import setAuthToken from '../../utils/setAuthToken'
 import { setChatTarget } from './chatAction'
 import { updateNugeFlag } from '../slice/chatSlice'
+import toast from '../../utils/toast'
 
 export const loginUser = (param) => dispatch => {
     return new Promise(resolve => {
@@ -23,6 +24,7 @@ export const loginUser = (param) => dispatch => {
                         dispatch(setCurrentUser(decoded))
                         socket.connect()
                         dispatch(setChatTarget({}))
+                        toast('Sign in successfully', 'success')
                     } catch (err) {
                         dispatch(setCurrentUser({}))
                     }
@@ -42,12 +44,38 @@ export const logoutUser = () => dispatch => {
     socket.disconnect()
 }
 
+export const setUserInfo = (param) => dispatch => {
+    return new Promise(resolve => {
+        axios.post(SERVER_URL + '/api/auth/info', param)
+            .then(({ data: res }) => {
+                const { status, token } = res;
+                if (!status) {
+                    localStorage.setItem('jwtToken', token)
+                    setAuthToken(token)
+                    try {
+                        const decoded = jwt_decode(token)
+                        dispatch(setCurrentUser(decoded))
+                    } catch (err) {
+                        console.error(err)
+                    }
+                }
+            })
+            .catch(err => { })
+            .finally(() => {
+                resolve();
+            })
+    })
+}
+
 export const registerUser = (param) => dispatch => {
     return new Promise(resolve => {
         axios.put(SERVER_URL + '/api/auth/register', param)
             .then(({ data: res }) => {
                 const { status, user, errors } = res
                 dispatch(setErrors(errors))
+                if (status == 0) {
+                    toast('Sign up successfully', 'success')
+                }
                 resolve()
             }).catch(err => {
                 console.error(err)

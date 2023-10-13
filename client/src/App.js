@@ -14,6 +14,8 @@ import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser } from "./store/slice/authSlice";
 import socket from "./socket";
 import { setChatTarget } from "./store/action/chatAction";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken)
@@ -37,6 +39,18 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <Routes>
           <Route exact path="/home" element={<PrivateRoute component={Home} />} />
           <Route exact path="/login" element={<PublicRoute component={Login} />} />
