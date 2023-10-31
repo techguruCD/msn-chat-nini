@@ -21,6 +21,7 @@ import { sendMessage } from '../store/action/chatAction';
 import ContactModal from '../components/modal/ContactModal';
 import { SERVER_URL } from '../config';
 import { addMessage, setMessages } from '../store/slice/chatSlice';
+import { getContacts, setChatTarget } from '../store/action/chatAction';
 
 const fontFamilies = [
     'Arial',
@@ -107,8 +108,9 @@ const Home = () => {
     const dispatch = useDispatch()
 
     const handleShow = () => {
-        if (step < msnStepMessages.length - 1) return;
-        setShow(true)
+        // if (step < msnStepMessages.length - 1) return;
+        // setShow(true)
+        dispatch(setChatTarget({ id: -1, mode: 1, name: 'Public Chat' }))
     }
     const handleClose = () => {
         setShow(false)
@@ -195,8 +197,10 @@ const Home = () => {
                 setAnimState(false);
             }, 1000)
         }
-        else
-            dispatch(setMessages([{ id: 0, content: 'Welcome', sender: -1, sendUser: { name: 'MSN Support' } }]))
+        else {
+            dispatch(setMessages([{ id: 0, content: 'Welcome', sender: -1, sendUser: { name: 'MSN Support' } }]));
+            setAnimState(false);
+        }
     }, [])
 
     function onClick(emojiData, event) {
@@ -229,7 +233,7 @@ const Home = () => {
                             {messages.map(message => <MessageItem key={message.id} message={message} mine={message.sender == user.id} />)}
                         </div>
                     </div>
-                    <Avatar imageURL={target.mode == 1 ? '/avatar/icons8-multiple-users-80.png' : (target.id ? (target.avatar ? SERVER_URL + target.avatar : '/avatar/online-avatar-online.png') : '/avatar/msn-icon.png')} onClick={handleShow} />
+                    <Avatar imageURL={target.mode == 1 ? '/avatar/icons8-multiple-users-80.png' : (target.id ? (target.avatar ? SERVER_URL + target.avatar : '/avatar/online-avatar-online.png') : '/avatar/msn-icon.png')} pressOption={!target.id} onClick={handleShow} />
                 </div>
                 <div className='from-container d-flex'>
                     <div className='from-message-area'>

@@ -5,6 +5,7 @@
     border-radius: $radiusSize;
     border: 1px solid $avatarBorderColor;
     position: relative;
+    text-align: center;
     @include paddingSize();
     @include marginLeft();
     @include avatarCoverSize();
