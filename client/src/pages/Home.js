@@ -108,7 +108,7 @@ const Home = () => {
     const dispatch = useDispatch()
 
     const handleShow = () => {
-        // if (step < msnStepMessages.length - 1) return;
+        if (step < msnStepMessages.length - 1) return;
         // setShow(true)
         dispatch(setChatTarget({ id: -1, mode: 1, name: 'Public Chat' }))
     }
@@ -233,7 +233,7 @@ const Home = () => {
                             {messages.map(message => <MessageItem key={message.id} message={message} mine={message.sender == user.id} />)}
                         </div>
                     </div>
-                    <Avatar imageURL={target.mode == 1 ? '/avatar/icons8-multiple-users-80.png' : (target.id ? (target.avatar ? SERVER_URL + target.avatar : '/avatar/online-avatar-online.png') : '/avatar/msn-icon.png')} pressOption={!target.id} onClick={handleShow} />
+                    <Avatar imageURL={target.mode == 1 ? '/avatar/icons8-multiple-users-80.png' : (target.id ? (target.avatar ? SERVER_URL + target.avatar : '/avatar/online-avatar-online.png') : '/avatar/msn-icon.png')} pressOption={!target.id && step < msnStepMessages.length - 1} onClick={handleShow} />
                 </div>
                 <div className='from-container d-flex'>
                     <div className='from-message-area'>
